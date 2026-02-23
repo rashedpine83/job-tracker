@@ -82,7 +82,7 @@ function getCardData(card) {
         designationData: card.querySelector('.designation').innerText,
         expectationData: card.querySelector('.expectation').innerText,
         descriptionData: card.querySelector('.description').innerText,
-        statusData: card.querySelector('.btn-status').innerText
+        statusData: card.querySelector('.btn-status').innerText,
     };
 }
 
