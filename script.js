@@ -29,16 +29,14 @@ mainContainer.addEventListener('click', function(event){
         const descriptionData = parant.querySelector('.description').innerText;
       
        
-
-         parant.querySelector('.btn-status').innerHTML = `
-            <button class="bg-white px-8 py-2 rounded-sm text-green-500 border-2 border-green-500 font-bold cursor-pointer">INTERVIEW</button>
-        `;
+            parant.querySelector('.btn-status').innerText = 'Interview'
+          
 
         const cardInfo = {
             qualificationData, 
             designationData, 
             expectationData,
-            statusData, 
+            statusData: 'Interview',
             descriptionData
         }
        
@@ -48,20 +46,50 @@ mainContainer.addEventListener('click', function(event){
         if(!interviewExit){
             interviewTotal.push(cardInfo);
         }
-        getFilterItem();
-    } 
+        rejectedTotal = rejectedTotal.filter(item => item.qualificationData != cardInfo.qualificationData);
+
+        getTotal();
+        getInterviewFilterItem();
+    }
+    else if(event.target.classList.contains('rejected-btn')){
+        const parant =event.target.parentNode.parentNode;
+        
+        const qualificationData = parant.querySelector('.qualification').innerText;
+        const designationData = parant.querySelector('.designation').innerText;
+        const expectationData = parant.querySelector('.expectation').innerText;
+        const statusData = parant.querySelector('.btn-status').innerText;
+        const descriptionData = parant.querySelector('.description').innerText;
+      
+       
+            parant.querySelector('.btn-status').innerText = 'Rejected'
+          
+
+        const cardInfo = {
+            qualificationData, 
+            designationData, 
+            expectationData,
+            statusData: 'rejected',
+            descriptionData
+        }
+       
+
+        const rejectedExit =  rejectedTotal.find(item => item.qualificationData == cardInfo.qualificationData);
+       
+        if(!rejectedExit){
+             rejectedTotal.push(cardInfo);
+        }
+        interviewTotal = interviewTotal.filter(item => item.qualificationData != cardInfo.qualificationData);
+
+        getTotal();
+        getInterviewFilterItem();
+    }  
 })
-
-
-
 
 function getTotal(){
     totalCount.innerText = allCardSection.children.length;
     interviewCount.innerText = interviewTotal.length;
     rejectedCount.innerText = rejectedTotal.length;
 }
-getTotal();
-
 
 function togglestyle(id){
     btnAll.classList.remove('bg-blue-500', 'text-white');
@@ -82,29 +110,31 @@ function togglestyle(id){
     }else if(id == 'btn-all' ){
         allCardSection.classList.remove('hidden');
         filterSection.classList.add('hidden');
+    }else if (id == 'btn-rejected'){
+        allCardSection.classList.add('hidden');
+        filterSection.classList.remove('hidden');
     }
-
 }
 
-function getFilterItem(){
+function getInterviewFilterItem(){
 
     filterSection.innerHTML = '';
 
     for (let person of interviewTotal){
-        console.log(person);
+        console.log(person)
        
         let div = document.createElement('div');
         div.className = 'card bg-white my-4 p-6 flex justify-between'
         div.innerHTML = `
              <div>
                 <div>
-                    <h2 class="qualification text-[20px] font-bold text-[#002C5C]">Mobile First Corp</h2>
+                    <h2 class="qualification text-[20px] font-bold text-[#002C5C]">${person.qualificationData}</h2>
 
                     <h3 class="designation text-gray-500 text-[18px]">React Native Developer</h3>
 
                     <p class="expectation text-gray-500 my-5">Remote • Full-time • $130,000 - $175,000</p>
 
-                    <button class="btn-status px-8 py-2 rounded-md font-bold mb-2">NOT APPLIED</button>
+                    <button class="btn-status px-8 py-2 rounded-md font-bold mb-2">${person.statusData}</button>
 
                     <p class="description text-gray-700 mb-8">Build cross-platform mobile applications using React Native. Work on products used by millions of users worldwide.</p>
                 </div>
@@ -119,6 +149,45 @@ function getFilterItem(){
                 <i class="fa-regular fa-trash-can"></i>
             </div>
         `
+        
+        filterSection.appendChild(div);
+    }
+}
+
+function getRejectedFilterItem(){
+
+    filterSection.innerHTML = '';
+
+    for (let rejectPerson of rejectedTotal){
+        console.log(rejectPerson)
+       
+        let div = document.createElement('div');
+        div.className = 'card bg-white my-4 p-6 flex justify-between'
+        div.innerHTML = `
+             <div>
+                <div>
+                    <h2 class="qualification text-[20px] font-bold text-[#002C5C]">${rejectPerson.qualificationData}</h2>
+
+                    <h3 class="designation text-gray-500 text-[18px]">React Native Developer</h3>
+
+                    <p class="expectation text-gray-500 my-5">Remote • Full-time • $130,000 - $175,000</p>
+
+                    <button class="btn-status px-8 py-2 rounded-md font-bold mb-2">${rejectPerson.statusData}</button>
+
+                    <p class="description text-gray-700 mb-8">Build cross-platform mobile applications using React Native. Work on products used by millions of users worldwide.</p>
+                </div>
+
+                <div class="flex gap-5">
+                    <button class="interview-btn bg-white px-8 py-2 rounded-sm text-green-500 border-2 border-green-500 font-bold cursor-pointer">INTERVIEW</button>
+
+                    <button class="rejected-btn bg-white px-8 py-2 rounded-sm text-red-500 border-2 border-red-500 font-bold cursor-pointer">REJECTED</button>
+                </div>
+            </div>
+            <div>
+                <i class="fa-regular fa-trash-can"></i>
+            </div>
+        `
+        
         filterSection.appendChild(div);
     }
 }
